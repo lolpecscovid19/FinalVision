@@ -5,10 +5,13 @@ public class Client {
     private int id;
     private String img;
     private String client;
-    private double amount;
+    private int total;
     private String status;
     private String date;
-
+    private int death;
+    private int recover;
+    private int vaccine;
+    
     public int getId() {
         return id;
     }
@@ -33,13 +36,7 @@ public class Client {
         this.client = client;
     }
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+  
 
     public String getStatus() {
         return status;
@@ -56,4 +53,36 @@ public class Client {
     public void setDate(String date) {
         this.date = date;
     }
+
+	public int getDeath() {
+		return death;
+	}
+
+	public void setDeath(int death) {
+		this.death = death;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public int getRecover() {
+		return recover;
+	}
+
+	public void setRecover(int recover) {
+		this.recover = recover;
+	}
+
+	public int getVaccine() {
+		return vaccine;
+	}
+
+	public void setVaccine(int vaccine) {
+		this.vaccine = vaccine;
+	}
 }

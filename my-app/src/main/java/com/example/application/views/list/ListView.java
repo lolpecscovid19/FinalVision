@@ -52,6 +52,10 @@ public class ListView extends Div {
     private Grid.Column<Client> amountColumn;
     private Grid.Column<Client> statusColumn;
     private Grid.Column<Client> dateColumn;
+    private Grid.Column<Client> deathColum;
+    private Grid.Column<Client> recoverColumn;
+    private Grid.Column<Client> vaccineColum;
+    
 
     public ListView() {
         addClassName("list-view");
@@ -63,7 +67,7 @@ public class ListView extends Div {
     private void createGrid() {
         createGridComponent();
         addColumnsToGrid();
-        addFiltersToGrid();
+        //addFiltersToGrid();
     }
 
     private void createGridComponent() {
@@ -79,9 +83,13 @@ public class ListView extends Div {
     private void addColumnsToGrid() {
         createIdColumn();
         createClientColumn();
+        createdeathColumn();
         createAmountColumn();
-        createStatusColumn();
+        createrecoverColumn();
+        creatVvaccineColumn();
         createDateColumn();
+        
+        
     }
 
     private void createIdColumn() {
@@ -102,22 +110,19 @@ public class ListView extends Div {
     }
 
     private void createAmountColumn() {
-        amountColumn = grid
-                .addEditColumn(Client::getAmount,
-                        new NumberRenderer<>(client -> client.getAmount(), NumberFormat.getCurrencyInstance(Locale.US)))
-                .text((item, newValue) -> item.setAmount(Double.parseDouble(newValue)))
-                .setComparator(client -> client.getAmount()).setHeader("Amount");
-    }
-
-    private void createStatusColumn() {
-        statusColumn = grid.addEditColumn(Client::getClient, new ComponentRenderer<>(client -> {
-            Span span = new Span();
-            span.setText(client.getStatus());
-            span.getElement().setAttribute("theme", "badge " + client.getStatus().toLowerCase());
-            return span;
-        })).select((item, newValue) -> item.setStatus(newValue), Arrays.asList("Pending", "Success", "Error"))
-                .setComparator(client -> client.getStatus()).setHeader("Status");
-    }
+        amountColumn = grid.addColumn(Client::getTotal, "amount").setHeader("Cases").setWidth("120px").setFlexGrow(0);  }
+   
+    private void creatVvaccineColumn() {
+    	vaccineColum = grid.addColumn(Client::getVaccine, "amount").setHeader("Vaccination").setWidth("140px").setFlexGrow(0);  }
+   
+    
+    private void createdeathColumn() {
+    	deathColum = grid.addColumn(Client::getDeath, "death").setHeader("Death").setWidth("120px").setFlexGrow(0);  }
+   
+    private void createrecoverColumn() {
+    	recoverColumn = grid.addColumn(Client::getRecover, "death").setHeader("Recovery").setWidth("120px").setFlexGrow(0);  }
+   
+  
 
     private void createDateColumn() {
         dateColumn = grid
@@ -126,93 +131,43 @@ public class ListView extends Div {
                 .setComparator(client -> client.getDate()).setHeader("Date").setWidth("180px").setFlexGrow(0);
     }
 
-    private void addFiltersToGrid() {
-        HeaderRow filterRow = grid.appendHeaderRow();
 
-        TextField idFilter = new TextField();
-        idFilter.setPlaceholder("Filter");
-        idFilter.setClearButtonVisible(true);
-        idFilter.setWidth("100%");
-        idFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        idFilter.addValueChangeListener(event -> dataProvider.addFilter(
-                client -> StringUtils.containsIgnoreCase(Integer.toString(client.getId()), idFilter.getValue())));
-        filterRow.getCell(idColumn).setComponent(idFilter);
 
-        TextField clientFilter = new TextField();
-        clientFilter.setPlaceholder("Filter");
-        clientFilter.setClearButtonVisible(true);
-        clientFilter.setWidth("100%");
-        clientFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        clientFilter.addValueChangeListener(event -> dataProvider
-                .addFilter(client -> StringUtils.containsIgnoreCase(client.getClient(), clientFilter.getValue())));
-        filterRow.getCell(clientColumn).setComponent(clientFilter);
-
-        TextField amountFilter = new TextField();
-        amountFilter.setPlaceholder("Filter");
-        amountFilter.setClearButtonVisible(true);
-        amountFilter.setWidth("100%");
-        amountFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        amountFilter.addValueChangeListener(event -> dataProvider.addFilter(client -> StringUtils
-                .containsIgnoreCase(Double.toString(client.getAmount()), amountFilter.getValue())));
-        filterRow.getCell(amountColumn).setComponent(amountFilter);
-
-        ComboBox<String> statusFilter = new ComboBox<>();
-        statusFilter.setItems(Arrays.asList("Pending", "Success", "Error"));
-        statusFilter.setPlaceholder("Filter");
-        statusFilter.setClearButtonVisible(true);
-        statusFilter.setWidth("100%");
-        statusFilter.addValueChangeListener(
-                event -> dataProvider.addFilter(client -> areStatusesEqual(client, statusFilter)));
-        filterRow.getCell(statusColumn).setComponent(statusFilter);
-
-        DatePicker dateFilter = new DatePicker();
-        dateFilter.setPlaceholder("Filter");
-        dateFilter.setClearButtonVisible(true);
-        dateFilter.setWidth("100%");
-        dateFilter.addValueChangeListener(event -> dataProvider.addFilter(client -> areDatesEqual(client, dateFilter)));
-        filterRow.getCell(dateColumn).setComponent(dateFilter);
-    }
-
-    private boolean areStatusesEqual(Client client, ComboBox<String> statusFilter) {
-        String statusFilterValue = statusFilter.getValue();
-        if (statusFilterValue != null) {
-            return StringUtils.equals(client.getStatus(), statusFilterValue);
-        }
-        return true;
-    }
-
-    private boolean areDatesEqual(Client client, DatePicker dateFilter) {
-        LocalDate dateFilterValue = dateFilter.getValue();
-        if (dateFilterValue != null) {
-            LocalDate clientDate = LocalDate.parse(client.getDate());
-            return dateFilterValue.equals(clientDate);
-        }
-        return true;
-    }
-
+ 
     private List<Client> getClients() {
     	List<Client> ClienteNams = new ArrayList<Client>();
+    	
     	CountryList gcon = new CountryList();
 		List<Country> countries = new ArrayList<Country>();
+		int aString = 0;
+		CovidData covid = new CovidData();
+		try {
+		 aString = covid.GetCountryName();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			aString = 0;
+		}
 		
 		countries = gcon.getCountryList();
 		int id = 0;
 		 for (Country country : countries) {
 			 String img = String.format("https://www.countryflags.io/%s/flat/64.png", country);
 			 id ++;
-			 ClienteNams.add(createClient(id, img, country.tonameString(), 47427.0,"Success", "2021-03-09"));
+			 ClienteNams.add(createClient(id, img, country.tonameString(), aString,47427+id,id+100, "2021-03-09"));
 	        }
     	
         return ClienteNams;
     }
 
-    private Client createClient(int id, String img, String client, double amount, String status, String date) {
+    private Client createClient(int id, String img, String client,int death, int amount, int recover ,String date) {
         Client c = new Client();
         c.setId(id);
+        c.setRecover(recover);
         c.setImg(img);
+        c.setDeath(death);
         c.setClient(client);
-        c.setAmount(amount);
-        c.setStatus(status);
+        c.setTotal(amount);
+   
         c.setDate(date);
 
         return c;
