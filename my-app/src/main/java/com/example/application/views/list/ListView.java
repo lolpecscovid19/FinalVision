@@ -40,7 +40,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 
 @Route(value = "list", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
-@PageTitle("List")
+@PageTitle("Country Covid_data")
 @CssImport("./views/list/list-view.css")
 public class ListView extends Div {
 

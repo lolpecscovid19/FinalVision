@@ -30,7 +30,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 
 @Route(value = "master-detail", layout = MainView.class)
-@PageTitle("Master-Detail")
+@PageTitle("Patient-Detail")
 @CssImport("./views/masterdetail/master-detail-view.css")
 public class MasterDetailView extends Div {
 
