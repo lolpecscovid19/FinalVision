@@ -29,7 +29,7 @@ public class CovidData {
 				      BufferedReader reader = new BufferedReader
 				      (new InputStreamReader(url.openStream()));
 				      BufferedWriter writer = new BufferedWriter
-				      (new FileWriter("data.json"));
+				      (new FileWriter("/data.json"));
 				      String line;
 				      while ((line = reader.readLine()) != null) {
 				         System.out.println(line);
@@ -156,9 +156,9 @@ public class CovidData {
 	
 	public List<Country> GetCountryName() throws  Exception{
 		cratejoson();
-		//String path = CovidData.class.getClassLoader().getResource("data.json").getPath();
-		
-		String content = readJsonFile("D:/java/SecondYear/javaweb/my-app/data.json");
+		//String path = CovidData.class.getClassLoader().getResource("/data.json").getPath();
+	
+		String content = readJsonFile("./data.json");
 		
 		JSONObject jobj = JSON.parseObject(content);
 		 
