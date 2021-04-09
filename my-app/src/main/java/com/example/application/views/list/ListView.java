@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import com.example.application.views.list.CountryList.Country;
+import com.example.application.views.list.CovidData.Country;
 import org.apache.commons.lang3.StringUtils;
 
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -33,7 +33,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.example.application.views.main.MainView;
 import com.vaadin.flow.router.RouteAlias;
 
-import com.example.application.views.list.CountryList;
+import com.example.application.views.list.CovidData;
 
 
 import com.vaadin.flow.component.dependency.CssImport;
@@ -55,6 +55,7 @@ public class ListView extends Div {
     private Grid.Column<Client> deathColum;
     private Grid.Column<Client> recoverColumn;
     private Grid.Column<Client> vaccineColum;
+    private Grid.Column<Client> newcases;
     
 
     public ListView() {
@@ -86,8 +87,10 @@ public class ListView extends Div {
         createdeathColumn();
         createAmountColumn();
         createrecoverColumn();
-        creatVvaccineColumn();
+        creatnewcases();
+       
         createDateColumn();
+       
         
         
     }
@@ -110,10 +113,13 @@ public class ListView extends Div {
     }
 
     private void createAmountColumn() {
-        amountColumn = grid.addColumn(Client::getTotal, "amount").setHeader("Cases").setWidth("120px").setFlexGrow(0);  }
+        amountColumn = grid.addColumn(Client::getTotal, "amount").setHeader("Cases").setWidth("140px").setFlexGrow(0);  }
    
     private void creatVvaccineColumn() {
-    	vaccineColum = grid.addColumn(Client::getVaccine, "amount").setHeader("Vaccination").setWidth("140px").setFlexGrow(0);  }
+    	vaccineColum = grid.addColumn(Client::getVaccine, "vaccine").setHeader("Vaccination").setWidth("140px").setFlexGrow(0);  }
+    
+    private void creatnewcases() {
+    	newcases = grid.addColumn(Client::getNewcases, "newcases").setHeader("New Cases").setWidth("140px").setFlexGrow(0);  }
    
     
     private void createdeathColumn() {
@@ -137,37 +143,40 @@ public class ListView extends Div {
     private List<Client> getClients() {
     	List<Client> ClienteNams = new ArrayList<Client>();
     	
-    	CountryList gcon = new CountryList();
+    	CovidData gcon = new CovidData();
 		List<Country> countries = new ArrayList<Country>();
-		int aString = 0;
+		
+	
 		CovidData covid = new CovidData();
+		
+		
 		try {
-		 aString = covid.GetCountryName();
+			countries = covid.GetCountryName();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			aString = 0;
+			e.printStackTrace();
 		}
-		
-		countries = gcon.getCountryList();
 		int id = 0;
 		 for (Country country : countries) {
 			 String img = String.format("https://www.countryflags.io/%s/flat/64.png", country);
 			 id ++;
-			 ClienteNams.add(createClient(id, img, country.tonameString(), aString,47427+id,id+100, "2021-03-09"));
-	        }
+			 
+				 ClienteNams.add(createClient(id, img,  country.tonameString(),country.getTotalDeaths(),country.getTotalConfirmed(),country.getTotalRecovered(),country.getNewConfirmed(),0, country.getDateString()));
+		 }
     	
         return ClienteNams;
     }
 
-    private Client createClient(int id, String img, String client,int death, int amount, int recover ,String date) {
+    private Client createClient(int id, String img, String name,int death, int csas, int recover , int newcases,int vaccine ,String date) {
         Client c = new Client();
         c.setId(id);
         c.setRecover(recover);
         c.setImg(img);
+        c.setNewcases(newcases);
         c.setDeath(death);
-        c.setClient(client);
-        c.setTotal(amount);
-   
+        c.setClient(name);
+        c.setTotal(csas);
+        c.setVaccine(vaccine);
         c.setDate(date);
 
         return c;

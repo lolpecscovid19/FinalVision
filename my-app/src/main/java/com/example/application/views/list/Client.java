@@ -8,9 +8,10 @@ public class Client {
     private int total;
     private String status;
     private String date;
-    private int death;
+    private Object death;
     private int recover;
     private int vaccine;
+    private int newcases;
     
     public int getId() {
         return id;
@@ -55,11 +56,11 @@ public class Client {
     }
 
 	public int getDeath() {
-		return death;
+		return Integer.parseInt(String.valueOf(death));
 	}
 
-	public void setDeath(int death) {
-		this.death = death;
+	public void setDeath(Object object) {
+		this.death = object;
 	}
 
 	public double getTotal() {
@@ -85,4 +86,13 @@ public class Client {
 	public void setVaccine(int vaccine) {
 		this.vaccine = vaccine;
 	}
+
+	public int getNewcases() {
+		return newcases;
+	}
+
+	public void setNewcases(int newcases) {
+		this.newcases = newcases;
+	}
+
 }
